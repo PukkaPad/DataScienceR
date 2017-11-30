@@ -1,0 +1,10 @@
+.Rapp.history
+.Rhistory
+*~
+/tests
+/data
+data/
+*.sublime-project
+*.sublime-workspace
+specdata/
+01_DataScientist_toolbox
