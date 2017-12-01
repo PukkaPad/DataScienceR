@@ -4,6 +4,7 @@
 /tests
 /data
 data/
+*.csv
 *.sublime-project
 *.sublime-workspace
 specdata/
