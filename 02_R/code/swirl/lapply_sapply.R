@@ -3,15 +3,8 @@
 # This dataset contains details of various nations and their flags. More information may be found here:
 # http://archive.ics.uci.edu/ml/datasets/Flags
 
-# specify the URL for the Flag data CSV
+# CSV
 flags <- read.csv('flags.csv')
-                    
-                    #, header = T, 
-                    #col.names <- c("country", "landmass", "zone", "area", "population", "language", 
-                     #            "religion", "bars", "stripes", "colors", "red", "green", "blue",
-                      #           "gold", "white", "black", "orange","mainhue", "circles", "crosses", 
-                       #          "saltires", "quarters", "sunstars", "crescents", "triangle", "icon",
-                        #         "animate", "text", "topleft", "botright"), fill = T)
 
 # preview first 6 lines
 head(flags)
