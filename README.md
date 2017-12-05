@@ -15,37 +15,37 @@ R Programming
 
 ## Course 3
 
-Getting and Cleaning Data.
+Getting and Cleaning Data
 
 
 ## Course 4
 
-Exploratory Data Analysis.
+Exploratory Data Analysis
 
 
 ## Course 5
 
-Reproductible Research.
+Reproductible Research
 
 
 ## Course 6
 
-Statistical Inference.
+Statistical Inference
 
 
 ## Course 7
 
-Regression Models.
+Regression Models
 
 
 ## Course 8
 
-Practical MAchine Learning.
+Practical MAchine Learning
 
 
 ## Course 9
 
-Developing Data Products.
+Developing Data Products
 
 
 ## Course 10
