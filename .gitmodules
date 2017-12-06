@@ -1,0 +1,4 @@
+[submodule "02_R/Assignment/week3/ProgrammingAssignment2"]
+  path = 02_R/Assignment/week3/ProgrammingAssignment2
+  url = https://github.com/PukkaPad/DataScienceR.git
+  ignore = dirty

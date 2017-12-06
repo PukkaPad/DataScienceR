@@ -9,3 +9,7 @@ data/
 *.sublime-workspace
 specdata/
 01_DataScientist_toolbox
+/Assignment3_data
+*.pdf
+*.zip
+*.out

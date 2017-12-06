@@ -17,3 +17,21 @@ hist(as.numeric(outcome[,11]), xlab = "Heart Attack Death",
 
 # 4. Ranking hospitals in all states
 # see rankall.R
+
+source("best.R")
+source("rankhospital.R")
+source("rankall.R")
+
+best("SC", "heart attack")
+best("NY", "pneumonia")
+rankhospital("NC", "heart attack", "worst")
+rankhospital("NY", "heart attack", 7)
+
+r <- rankall("heart attack", 4)
+as.character(subset(r, state == "HI")$hospital)
+
+r <- rankall("pneumonia", "worst")
+as.character(subset(r, state == "NJ")$hospital)
+
+r <- rankall("heart failure", 10)
+as.character(subset(r, state == "NV")$hospital)

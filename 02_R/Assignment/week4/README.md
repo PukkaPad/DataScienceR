@@ -6,6 +6,10 @@ This dataset is used for a variety of purposes, including determining whether ho
 
 You will want to focus on the variables for Number 19 (“Outcome of Care Measures.csv”) and Number 11 (“Hospital Data.csv”).
 
-## Plot the 30-day mortality rates for heart attack
+### Plot the 30-day mortality rates for heart attack
 
-## Finding the best hospital in a state
+### Finding the best hospital in a state
+
+### Ranking hospitals by outcome in a state
+
+### Ranking hospitals in all states
