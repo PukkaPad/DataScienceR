@@ -13,3 +13,4 @@ specdata/
 *.pdf
 *.zip
 *.out
+.httr-oauth
