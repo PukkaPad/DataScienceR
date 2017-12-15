@@ -3,51 +3,51 @@
 The specialization consists of the following courses:
 
 
-##    Course 1
+## Course 1
 
 The Data Scientist's Toolbox
 
 
-##    [Course 2](https://github.com/PukkaPad/DataScienceR/tree/master/02_R)
+## [Course 2](https://github.com/PukkaPad/DataScienceR/tree/master/02_R)
 
 R Programming
 
 
-##    Course 3
+## [Course 3](https://github.com/PukkaPad/DataScienceR/tree/master/03_Getting_and_CleaningData)
 
 Getting and Cleaning Data
 
 
-##    Course 4
+## Course 4
 
 Exploratory Data Analysis
 
 
-##    Course 5
+## Course 5
 
 Reproductible Research
 
 
-##    Course 6
+## Course 6
 
 Statistical Inference
 
 
-##    Course 7
+## Course 7
 
 Regression Models
 
 
-##    Course 8
+## Course 8
 
 Practical Machine Learning
 
 
-##    Course 9
+## Course 9
 
 Developing Data Products
 
 
-##    Course 10
+## Course 10
 
 Data Science Capstone
