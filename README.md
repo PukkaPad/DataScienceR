@@ -15,7 +15,7 @@ R Programming
 
 Getting and Cleaning Data
 
-## Course 4
+## [Course 4](https://github.com/PukkaPad/DataScienceR/tree/master/04_ExploratoryDataAnalysis)
 
 Exploratory Data Analysis
 
