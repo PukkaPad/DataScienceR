@@ -14,3 +14,6 @@ specdata/
 *.zip
 *.out
 .httr-oauth
+*.png
+Instructions.md
+UCI HAR Dataset/
