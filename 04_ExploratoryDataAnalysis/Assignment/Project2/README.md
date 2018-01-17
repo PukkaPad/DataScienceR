@@ -12,7 +12,7 @@ data that we use for this assignment are for 1999, 2002, 2005, and
 
 * **PM2.5 Emissions Data** (`𝚜𝚞𝚖𝚖𝚊𝚛𝚢𝚂𝙲𝙲_𝙿𝙼𝟸𝟻.𝚛𝚍𝚜`): 
 
-This file contains a data frame with all of the PM<sub>2.5</sub> emissions data for 1999, 2002, 2005, and 2008. For each year, the table contains number of tons of PM~2.5 emitted from a specific type of source for the entire year.
+This file contains a data frame with all of the PM<sub>2.5</sub> emissions data for 1999, 2002, 2005, and 2008. For each year, the table contains number of tons of PM<sub>2.5</sub> emitted from a specific type of source for the entire year.
 
 	- Variables:
 
@@ -44,7 +44,7 @@ The overall goal is to explore the National Emissions Inventory database and see
 
 * Questions
 
-	- Have total emissions from PM<sub>2.5</sub> decreased in the United States from 1999 to 2008? Using the **base** plotting system, make a plot showing the total PM2.5 emission from all sources for each of the years 1999, 2002, 2005, and 2008.
+	- Have total emissions from PM<sub>2.5</sub> decreased in the United States from 1999 to 2008? Using the **base** plotting system, make a plot showing the total PM<sub>2.5</sub> emission from all sources for each of the years 1999, 2002, 2005, and 2008.
 	[plot1.png](https://github.com/PukkaPad/DataScienceR/blob/master/04_ExploratoryDataAnalysis/Assignment/Project2/plot1.png)
 
 	- Have total emissions from PM<sub>2.5</sub> decreased in the **Baltimore City**, Maryland(``𝚏𝚒𝚙𝚜 == "𝟸𝟺𝟻𝟷𝟶"``) from 1999 to 2008? Use the **base** plotting system to make a plot answering this question.
@@ -73,6 +73,3 @@ For each plot you should
 * Upload the PNG file on the Assignment submission page
 
 * Copy and paste the R code from the corresponding R file into the text box at the appropriate point in the peer assessment.
-
-
-	plot6.png
