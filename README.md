@@ -19,7 +19,7 @@ Getting and Cleaning Data
 
 Exploratory Data Analysis
 
-## Course 5
+## [Course 5](https://github.com/PukkaPad/DataScienceR/tree/master/05_ReproductibleResearch)
 
 Reproductible Research
 
