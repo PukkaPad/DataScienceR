@@ -1,0 +1,121 @@
+My First R Markdown File
+========================
+
+<!-- Comments 
+Setting global options
+an example -->
+<!-- ```{r setoptions, echo=False} -->
+<!-- opts_chunk$set(echo=FALSE, results ="hide") -->
+<!-- ``` -->
+
+This is my first R markdown dile.
+
+Here, I'm going to load some data.
+
+```{r}
+library(datasets)
+data(airquality)
+summary(airquality)
+```
+
+Make a pairs plot of the data.
+
+```{r}
+pairs(airquality)
+```
+
+Regression model of ozone on wind, solar radiation and temperature
+
+```{r}
+library(stats)
+fit <- lm(Ozone ~ Wind + Solar.R + Temp, data = airquality)
+summary(fit)
+```
+
+Unordered list:
+
+ • First element
+ 
+ * Second element
+ 
+
+This is some text (i.e. a "text chunk")
+
+Here is a code chunk
+```{r}
+set.seed(1)
+x <- rnorm(100)
+mean(x)
+```
+
+Another example
+
+# My First kniter Document
+Mariana S.
+
+## Introduction
+
+This is some text (i.e. a "text chunk").
+Here is a code chunk (it wont be echoed - wont appear in the document generated)
+```{r simulation, echo=FALSE}
+set.seed(1)
+x <- rnorm(100)
+mean(x)
+```
+
+This is some text (i.e. a "text chunk").
+Here is a code chunk but it does not print anything
+```{r simulation2, echo=FALSE, results="hide"}
+set.seed(1)
+x <- rnorm(100)
+mean(x)
+```
+
+## Inline Text Computations
+### Intro
+```{r computetime,echo=FALSE}
+Sys.setenv(TZ="Europe/London")
+Sys.getenv("TZ")
+time <- format(Sys.time(), "%a %b %d %Y %X ")
+rand <- rnorm(1)
+```
+
+The current time is `r time`.
+My favourite random number is `r rand`.
+
+
+## Incorporating GRaphics
+### Intro
+Simulate some data.
+```{r simulatedata, echo=TRUE}
+x <- rnorm(100)
+y <- x + rnorm(100, sd = 0.5)
+```
+
+Here is a scatterplot of the data.
+```{r scatterplot, fig.height=4}
+par(mar = c(5,4,1,1), las = 1)
+plot(x, y, main = "My Simulated Data")
+```
+
+## Making Tables with xtable
+### Intro
+
+```{r fitmodel}
+library(datasets)
+data(airquality)
+fit <- lm(Ozone ~ Wind + Temp + Solar.R, data = airquality)
+```
+
+Here is a table of regression coefficients.
+```{r showtable, results="asis"}
+library(xtable)
+xt <- xtable(summary(fit))
+print(xt, type = "html")
+```
+
+
+
+
+
+
