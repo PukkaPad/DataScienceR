@@ -1,9 +1,5 @@
----
-title: "Reproducible Research: Peer Assessment 1"
-output: 
-  html_document:
-    keep_md: true
----
+# Reproducible Research: Peer Assessment 1
+
 
 ```{r globaloptions, echo = FALSE, results='hide', warning=FALSE, message=FALSE}
 knitr::opts_chunk$set(warning = FALSE, message = FALSE, 
@@ -19,6 +15,7 @@ library(ggplot2)
 library(scales)
 library(Hmisc)
 library(scales)
+library(lattice)
 ```
 
 ## Loading and preprocessing the data
@@ -216,3 +213,32 @@ Upon checking the histograms, max steps have increased by using the imputed data
 I now have higher frequency counts in the histogram.
 
 ## Are there differences in activity patterns between weekdays and weekends?
+### 1. Create a new factor variable in the dataset with two levels – “weekday” and “weekend” 
+Function:
+
+```{r}
+week_day <- function(d){
+    wd <- weekdays(d)
+    ifelse (wd == "Saturday" | wd == "Sunday", "weekend", "weekday")
+}
+
+data_impute$date <- as.Date(data_impute$date , format = "%Y-%m-%d")
+str(data_impute)
+data_impute$day <- sapply(data_impute$date, FUN=week_day)
+head(data_impute)
+```
+
+### 2. Make a panel plot containing a time series plot 
+
+I will average the 5-min interval across all the weekday days or weekend days
+
+```{r}
+weekDF <- aggregate(steps ~ day+interval, data = data_impute, FUN = mean)
+```
+
+Now I will generate the plot
+
+```{r plotweek} 
+xyplot(steps ~ interval | factor(day), layout = c(1,2), xlab = "Interval", 
+       ylab = "Number of Steps", type = "l", col = "black", data = weekDF)
+```
