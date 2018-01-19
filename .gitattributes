@@ -1,0 +1,3 @@
+# ignore all files and list project as R
+* linguist-vendored
+*.R linguist-vendored=false

@@ -24,7 +24,7 @@ Exploratory Data Analysis
 Reproductible Research
 
 
-## Course 6
+## [Course 6]()
 
 Statistical Inference
 
