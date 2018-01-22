@@ -18,3 +18,8 @@ specdata/
 Instructions.md
 UCI HAR Dataset/
 /figure
+rsconnect/
+figure-html/
+*_cache/
+*.html
+*.csv.bz2

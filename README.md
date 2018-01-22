@@ -23,24 +23,22 @@ Exploratory Data Analysis
 
 Reproductible Research
 
-
-## [Course 6]()
+## [Course 6](https://github.com/PukkaPad/DataScienceR/tree/master/05_StatisticalInference)
 
 Statistical Inference
 
-
-## Course 7
+## [Course 7]()
 
 Regression Models
 
-## Course 8
+## [Course 8]()
 
 Practical Machine Learning
 
-## Course 9
+## [Course 9]()
 
 Developing Data Products
 
-## Course 10
+## [Course 10]()
 
 Data Science Capstone

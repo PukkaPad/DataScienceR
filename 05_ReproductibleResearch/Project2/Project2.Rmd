@@ -1,0 +1,245 @@
+---
+title: "Project 2 - NOAA Storm Data Analysis"
+---
+
+```{r globaloptions, echo = FALSE, results='hide', warning=FALSE, message=FALSE}
+knitr::opts_chunk$set(warning = FALSE, message = FALSE, 
+                      fig.width=12, fig.height=8, fig.path="figure-html/")
+```
+
+```{r, echo=TRUE}
+library(ggplot2)
+library(scales)
+library(scales)
+library(lattice)
+library(stringr)
+library(grid)
+```
+
+# Exploring Public Health and Economic Impact caused by Storms and other Severe Weather
+
+Storms and other severe weather events can cause both public health and economic problems for communities and municipalities. Many severe events can result in fatalities, injuries, and property damage, and preventing such outcomes to the extent possible is a key concern.
+
+This project involves exploring the U.S. National Oceanic and Atmospheric Administration's (NOAA) storm database. This database tracks characteristics of major storms and weather events in the United States, including when and where they occur, as well as estimates of any fatalities, injuries, and property damage.
+
+## 1. Synopsis
+
+This document is an elementary data analysis for the NOAA storm data from 1950-2011. The focus of this work is to analyse population health and economic damage caused by storms and other severe weather events.
+
+The analysis revealed that tornadoes were the most dangerous weather event to population health, followed by excessive heat (which is about 10x lower in terms of fatalities or injuries). Flash floods are the most dangerous events to properties, followed by thunderstorm. The largest crop damage caused by drought, followed by flood.
+
+## 2. Data Processing
+
+Data needs to be downloaded:
+
+```{r downloadStorm, cache = TRUE}
+if(!file.exists("StormData.csv.bz2")) {
+    dataURL = "http://d396qusza40orc.cloudfront.net/repdata%2Fdata%2FStormData.csv.bz2"
+    download.file(dataURL, destfile="StormData.csv.bz2")
+}
+
+```
+
+Then data will be loaded up:
+
+```{r loadData, cache = TRUE}
+storm <- read.csv("StormData.csv.bz2")
+```
+
+Now it needs to be checked:
+
+```{r}
+str(storm)
+```
+
+Select the columns I need:
+
+```{r selectCol, cache = TRUE}
+stormData <- storm[,c(8,23,24,25,26,27,28)]
+str(stormData)
+head(stormData)
+tail(stormData)
+```
+
+Data looks OK. Analysis will be performed using the sliced data (`stormData`).
+
+## 3. Data Analysis
+We are interested to analyse  which types of events are most harmful with respect to population health and which types of events have the greatest economic consequences. There questions are addressed below
+
+### 3.1 Types of events are most harmful with respect to population health
+
+Aggregate fatalities and injuries by event type in order to find the events that are most harmful to population health:
+
+```{r popHealth}
+fatalities <- aggregate(FATALITIES ~ EVTYPE, data=stormData, sum)
+fatalities <- fatalities[order(fatalities$FATALITIES, decreasing = TRUE), ]
+injuries <- aggregate(INJURIES ~ EVTYPE, data=stormData, sum)
+injuries <- injuries[order(injuries$INJURIES, decreasing = TRUE), ]
+```
+
+Check the top 10 events that caused most fatalities and injuries:
+
+```{r headFI}
+head(fatalities, 10)
+head(injuries, 10)
+```
+
+Bar plot of the top 10 events that caused most fatalities and injuries:
+
+```{r barPopHealth}
+require(gridExtra)
+plot1 <- ggplot(data = fatalities[1:10,], aes(x = reorder(EVTYPE, -FATALITIES), y = FATALITIES)) +
+  geom_bar(stat="identity") + theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+  xlab("") + ylab("# Fatalties") + ggtitle("Events with top 10 fatalities") + 
+    theme(plot.title = element_text(hjust=0.5))
+
+plot2 <- ggplot(data = injuries[1:10,], aes(x = reorder(EVTYPE, -INJURIES), y = INJURIES)) +
+  geom_bar(stat="identity") + theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+    scale_x_discrete(labels = function(x) str_wrap(x, width = 10))  +
+  xlab("") + ylab("# Injuries") + ggtitle("Event with top 10 injuries") + 
+    theme(plot.title = element_text(hjust=0.5))
+
+plot3 <- ggplot(data = fatalities[1:10,], aes(x = reorder(EVTYPE, -FATALITIES), y = FATALITIES)) +
+  geom_bar(stat="identity") + theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+    xlab("Event type") + ylab("# Fatalties") + ggtitle("Events with top 10 fatalities") + 
+    theme(plot.title = element_text(hjust=0.5)) + ylim (0, 95000)
+
+plot4 <- ggplot(data = injuries[1:10,], aes(x = reorder(EVTYPE, -INJURIES), y = INJURIES)) +
+  geom_bar(stat="identity") + theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+    scale_x_discrete(labels = function(x) str_wrap(x, width = 10)) + xlab("Event type") + 
+    ylab("# Injuries") + ggtitle("Event with top 10 injuries") + 
+    theme(plot.title = element_text(hjust=0.5)) + ylim (0, 95000)
+
+title <- paste("Top 10 events most harmfull to popotation in USA from 1950-2011", " *Note that the 2 bar plots at the top row are not in the same y-range, whereas in the bottom row they are.", sep="\n")
+grid.arrange(plot1, plot2, plot3, plot4, ncol = 2, top = title)
+```
+
+### 3.2 Types of events have the greatest economic consequences
+
+The data has two types of damages costed, Crop damage and Property damage.
+PROPDMG PROPDMGEXP CROPDMG CROPDMGEXP are the columns I am interested.
+
+Edit the columns with EXP, so the numbers are not represented by k, h, etc.
+
+```{r expCols, cache = TRUE}
+transformExp <- function(e) {
+    # h -> hundred, k -> thousand, m -> million, b -> billion
+    if (e %in% c('h', 'H'))
+        return(2)
+    else if (e %in% c('k', 'K'))
+        return(3)
+    else if (e %in% c('m', 'M'))
+        return(6)
+    else if (e %in% c('b', 'B'))
+        return(9)
+    else if (!is.na(as.numeric(e))) # if a digit
+        return(as.numeric(e))
+    else if (e %in% c('', '-', '?', '+'))
+        return(0)
+    else {
+        stop("Invalid exponent value.")
+    }
+}
+```
+
+Transform the columns:
+
+```{r econConsec, cache = TRUE}
+propertyDamageExp <- sapply(stormData$PROPDMGEXP, FUN=transformExp)
+stormData$PROPDMGCOST <- stormData$PROPDMG * (10 ** propertyDamageExp)
+cropDamageExp <- sapply(stormData$CROPDMGEXP, FUN=transformExp)
+stormData$CROPDMGCOST <- stormData$CROPDMG * (10 ** cropDamageExp)
+```
+
+Check if everything is OK:
+
+```{r}
+head(stormData)
+str(stormData)
+```
+
+Conversion worked fine.
+
+Aggregate economic loss and event type:
+
+```{r econHealth}
+cropCost <- aggregate(CROPDMGCOST ~ EVTYPE, data=stormData, sum)
+cropCost <- cropCost[order(cropCost$CROPDMGCOST, decreasing = TRUE), ]
+propertyCost <- aggregate(PROPDMGCOST ~ EVTYPE, data=stormData, sum)
+propertyCost <- propertyCost[order(propertyCost$PROPDMGCOST, decreasing = TRUE), ]
+```
+
+Check the top 10 events that caused most economic loss to properties and crops:
+
+```{r headMoney}
+#options(scipen = 50)
+head(propertyCost, 10)
+head(cropCost, 10)
+```
+
+Bar plot of the top 10 events that caused most economic loss to properties and crops:
+
+```{r barEconHealth}
+#require(gridExtra)
+plot1 <- ggplot(data = propertyCost[1:10,], aes(x = reorder(EVTYPE, -PROPDMGCOST), y = PROPDMGCOST)) +
+  geom_bar(stat="identity") + theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+    scale_x_discrete(labels = function(x) str_wrap(x, width = 10)) +
+  xlab("") + ylab("Damages") + ggtitle("Top 10 Costly Property Damage") + 
+    theme(plot.title = element_text(hjust=0.5))
+plot2 <- ggplot(data = cropCost[1:10,], aes(x = reorder(EVTYPE, -CROPDMGCOST), y = CROPDMGCOST)) +
+  geom_bar(stat="identity") + theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+    scale_x_discrete(labels = function(x) str_wrap(x, width = 10))  +
+  xlab("") + ylab("# Damages") + ggtitle("Top 10 Costly Crop Damage") + 
+    theme(plot.title = element_text(hjust=0.5))
+
+title <- paste("Top 10 Costly Events in USA due to Severe Weather Events, from 1950-2011", " *Note that the bar plots are not in the same y-range.", sep="\n")
+grid.arrange(plot1, plot2, ncol = 2, top = title)
+```
+
+### Check events that affected population healthy most and also he ones that caused maximum total damage:
+
+```{r badOnes}
+# Merge the property damage data and crop damage, and select the top ten damage.
+damage <- merge(propertyCost, cropCost, by="EVTYPE")
+damage$TotalDamage <- damage$PROPDMGCOST + damage$CROPDMGCOST
+damage <- damage[order(damage$TotalDamage, decreasing = T), ]
+TopDamage <- damage[1:10, ]
+head(damage)
+TopDamage
+
+# Sum fatalities and injuries by EVTYPE, and get the top 10 Harmful types.
+DeathInjury <- merge(fatalities, injuries, by="EVTYPE")
+DeathInjury$TotalHarm <- DeathInjury$FATALITIES + DeathInjury$INJURIES
+DeathInjury <- DeathInjury[order(DeathInjury$TotalHarm, decreasing = T), ]
+TopHarm <- DeathInjury[1:10, ]
+head(DeathInjury)
+TopHarm
+```
+
+## 4. Results
+
+```{r plotBadOnes, fig.height=15}
+plot1 <- ggplot(data = TopHarm, aes(x = reorder(EVTYPE, -TotalHarm), y = TotalHarm)) +
+    geom_bar(stat="identity") + theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+    xlab("") + ylab("Harm") +
+    ggtitle("Top harm due to severe weather events\nin the U.S from 1950-2011") +
+    theme(plot.title = element_text(hjust=0.5))
+
+plot2 <- ggplot(data = TopDamage, aes(x = reorder(EVTYPE, -TotalDamage), y = TotalDamage)) +
+    geom_bar(stat="identity") + theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+    xlab("Top 10 events") + ylab("Economic Damage") +
+    ggtitle("Top economic damage due to severe weather events\nin the U.S from 1950-2011") +
+    theme(plot.title = element_text(hjust=0.5))
+
+
+title <- textGrob("Top 10 events most harmfull in USA from 1950-2011", gp=gpar(fontface = "bold", fontsize = 18))
+grid.arrange(plot1, plot2, ncol = 1, top = title)
+```
+
+The data shows that, between 1950 and 2011 flash floods, thunderstorm winds and tornado caused maximum economic damages among weather-related natural disasters. With regards to population health, tornado, excessive heat and tstm wind caused most harm.
+It's worth to point out that more data cleaning is needed as it is possible to notice that, for example `tstm = thunderstorm`.
+
+
+Tornado, excessive heat and flash flood caused most fatalities.Tornado, flooding and drought caused severe injuries. 
+
+In terms of property damage, the most severe weather is flash flood. The most severe weather event in terms of crop damage is the drought.
