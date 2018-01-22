@@ -23,7 +23,7 @@ Exploratory Data Analysis
 
 Reproductible Research
 
-## [Course 6](https://github.com/PukkaPad/DataScienceR/tree/master/05_StatisticalInference)
+## [Course 6](https://github.com/PukkaPad/DataScienceR/tree/master/06_StatisticalInference)
 
 Statistical Inference
 
