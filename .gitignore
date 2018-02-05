@@ -18,6 +18,7 @@ specdata/
 Instructions.md
 UCI HAR Dataset/
 /figure
+figure/
 rsconnect/
 figure-html/
 *.html
