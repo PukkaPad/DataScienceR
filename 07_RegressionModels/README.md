@@ -1,5 +1,4 @@
-
-# Regression Models
+# Regression Models
 
 The track is focused on providing three things: 
 
