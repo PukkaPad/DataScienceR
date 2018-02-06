@@ -188,9 +188,11 @@ $(document).ready(function () {
 <h2>Revisiting an earlier example</h2>
 <ul>
 <li>Suppose a friend has <span class="math inline">\(8\)</span> children, <span class="math inline">\(7\)</span> of which are girls and none are twins</li>
-<li>If each gender has an independent <span class="math inline">\(50\)</span>% probability for each birth, what’s the probability of getting <span class="math inline">\(7\)</span> or more girls out of <span class="math inline">\(8\)</span> births?</li>
+<li><p>If each gender has an independent <span class="math inline">\(50\)</span>% probability for each birth, what’s the probability of getting <span class="math inline">\(7\)</span> or more girls out of <span class="math inline">\(8\)</span> births?</p></li>
+<li><span class="math inline">\(H_0\)</span>: p = 0.5 versus <span class="math inline">\(H_a\)</span>: p &gt; 0.5</li>
+<li><p>prob of having a girl is equal to 0.5 or greater</p></li>
 </ul>
-<pre class="r"><code>choose(8, 7) * .5 ^ 8 + choose(8, 8) * .5 ^ 8 </code></pre>
+<pre class="r"><code>choose(8, 7) * .5 ^ 8 + choose(8, 8) * .5 ^ 8 # p value = 0.035</code></pre>
 <pre><code>## [1] 0.03515625</code></pre>
 <pre class="r"><code>pbinom(6, size = 8, prob = .5, lower.tail = FALSE)</code></pre>
 <pre><code>## [1] 0.03515625</code></pre>
@@ -207,6 +209,7 @@ $(document).ready(function () {
 </ul>
 <pre class="r"><code>ppois(9, 5, lower.tail = FALSE)</code></pre>
 <pre><code>## [1] 0.03182806</code></pre>
+<pre class="r"><code># the probability is 3%</code></pre>
 <hr />
 </div>
 <div id="exercises" class="section level2">
@@ -215,7 +218,6 @@ $(document).ready(function () {
 <li>P-values are probabilities that are calculated assuming which hypothesis is true?</li>
 </ol>
 <ul>
-<li>the alternative</li>
 <li>the null</li>
 </ul>
 <ol start="2" style="list-style-type: decimal">
@@ -223,30 +225,130 @@ $(document).ready(function () {
 </ol>
 <ul>
 <li>Yes you would reject the null</li>
-<li>No you would not reject the null</li>
-<li>It depends on information not given</li>
 </ul>
 <ol start="3" style="list-style-type: decimal">
 <li>The proposed procedure for getting a two sided P-value for the exact binomial test considered here is what?</li>
 </ol>
 <ul>
-<li>Multiplying the one sided P-value by one half</li>
-<li>Doubling the larger of the two one sided P-values</li>
 <li>Doubling the smaller of the two one sided P-values</li>
-<li>No procedure exists</li>
 </ul>
 <ol start="4" style="list-style-type: decimal">
-<li><p>Consider again the mtcars dataset. Use a two group t-test to test the hypothesis that the 4 and 6 cyl cars have the same mpg. Use a two sided test with unequal variances. Give a P-value.</p></li>
-<li><p>You believe the coin that you’re flipping is biased towards heads. You get 55 heads out of 100 flips. Give an exact P-value for the hypothesis that the coin is fair.</p></li>
-<li><p>A web site was monitored for a year and it received 520 hits per day. In the first 30 days in the next year, the site received 15,800 hits. Assuming that web hits are Poisson. Give an exact one sided P-value to the hypothesis that web hits are up this year over last. Do you reject?</p></li>
-<li><p>Suppose that in an AB test, one advertising scheme led to an average of 10 purchases per day for a sample of 100 days, while the other led to 11 purchases per day, also for a sample of 100 days. Assuming a common standard deviation of 4 purchases per day. Assuming that the groups are independent and that they days are iid, perform a Z test of equivalence. Give a P-value for the test?</p></li>
-<li><p>Consider the mtcars data set.</p></li>
+<li>Consider again the mtcars dataset. Use a two group t-test to test the hypothesis that the 4 and 6 cyl cars have the same mpg. Use a two sided test with unequal variances. Give a P-value.</li>
+</ol>
+<pre class="r"><code>data(mtcars)
+head(mtcars)</code></pre>
+<pre><code>##                    mpg cyl disp  hp drat    wt  qsec vs am gear carb
+## Mazda RX4         21.0   6  160 110 3.90 2.620 16.46  0  1    4    4
+## Mazda RX4 Wag     21.0   6  160 110 3.90 2.875 17.02  0  1    4    4
+## Datsun 710        22.8   4  108  93 3.85 2.320 18.61  1  1    4    1
+## Hornet 4 Drive    21.4   6  258 110 3.08 3.215 19.44  1  0    3    1
+## Hornet Sportabout 18.7   8  360 175 3.15 3.440 17.02  0  0    3    2
+## Valiant           18.1   6  225 105 2.76 3.460 20.22  1  0    3    1</code></pre>
+<pre class="r"><code>c4 &lt;- mtcars$mpg[mtcars$cyl== 4]
+c6 &lt;- mtcars$mpg[mtcars$cyl== 6]
+
+t.test(c4, c6)</code></pre>
+<pre><code>## 
+##  Welch Two Sample t-test
+## 
+## data:  c4 and c6
+## t = 4.7191, df = 12.956, p-value = 0.0004048
+## alternative hypothesis: true difference in means is not equal to 0
+## 95 percent confidence interval:
+##   3.751376 10.090182
+## sample estimates:
+## mean of x mean of y 
+##  26.66364  19.74286</code></pre>
+<ul>
+<li>t = 0.0004 - rejecting</li>
+</ul>
+<ol start="5" style="list-style-type: decimal">
+<li>You believe the coin that you’re flipping is biased towards heads. You get 55 heads out of 100 flips. Give an exact P-value for the hypothesis that the coin is fair.</li>
+</ol>
+<ul>
+<li>Test: <span class="math inline">\(H_0: p = 0.5\)</span> versus <span class="math inline">\(H_a\)</span>: p &gt; 0.5$</li>
+</ul>
+<pre class="r"><code>pbinom(54, size = 100, prob = 0.5, lower.tail = FALSE)</code></pre>
+<pre><code>## [1] 0.1841008</code></pre>
+<ul>
+<li>reject</li>
+</ul>
+<ol start="6" style="list-style-type: decimal">
+<li>A web site was monitored for a year and it received 520 hits per day. In the first 30 days in the next year, the site received 15,800 hits. Assuming that web hits are Poisson. Give an exact one sided P-value to the hypothesis that web hits are up this year over last. Do you reject?</li>
+</ol>
+<pre class="r"><code>ppois(15800 - 1, lambda = 520 * 30, lower.tail = FALSE) </code></pre>
+<pre><code>## [1] 0.05533114</code></pre>
+<ul>
+<li>result is 0.055</li>
+<li>does not reject (5%)</li>
+</ul>
+<ol start="7" style="list-style-type: decimal">
+<li>Suppose that in an AB test, one advertising scheme led to an average of 10 purchases per day for a sample of 100 days, while the other led to 11 purchases per day, also for a sample of 100 days. Assuming a common standard deviation of 4 purchases per day. Assuming that the groups are independent and that they days are iid, perform a Z test of equivalence. Give a P-value for the test?</li>
+</ol>
+<pre class="r"><code>m1 = 10
+m2 = 11
+dif = m1 - m2
+sdev = 4
+se = 4 * sqrt(1/100 + 1/100)
+z = (dif - 0) / se # -1.77 SE away from zero
+# 2 sided test
+2 * pnorm(z)</code></pre>
+<pre><code>## [1] 0.07709987</code></pre>
+<ol start="8" style="list-style-type: decimal">
+<li>Consider the mtcars data set.</li>
 </ol>
 <ul>
 <li>Give the p-value for a t-test comparing MPG for 6 and 8 cylinder cars assuming equal variance, as a proportion to 3 decimal places.</li>
 <li>Give the associated P-value for a z test.</li>
 <li>Give the common standard deviation estimate for MPG across cylinders to 3 decimal places.</li>
 <li>Would the t test reject at the two sided 0.05 level (0 for no 1 for yes)?</li>
+</ul>
+<pre class="r"><code>data(mtcars)
+head(mtcars)</code></pre>
+<pre><code>##                    mpg cyl disp  hp drat    wt  qsec vs am gear carb
+## Mazda RX4         21.0   6  160 110 3.90 2.620 16.46  0  1    4    4
+## Mazda RX4 Wag     21.0   6  160 110 3.90 2.875 17.02  0  1    4    4
+## Datsun 710        22.8   4  108  93 3.85 2.320 18.61  1  1    4    1
+## Hornet 4 Drive    21.4   6  258 110 3.08 3.215 19.44  1  0    3    1
+## Hornet Sportabout 18.7   8  360 175 3.15 3.440 17.02  0  0    3    2
+## Valiant           18.1   6  225 105 2.76 3.460 20.22  1  0    3    1</code></pre>
+<pre class="r"><code>c6 &lt;- mtcars$mpg[mtcars$cyl== 6]
+c8 &lt;- mtcars$mpg[mtcars$cyl== 8]
+
+t.test(c6, c8, var.equal=TRUE)</code></pre>
+<pre><code>## 
+##  Two Sample t-test
+## 
+## data:  c6 and c8
+## t = 4.419, df = 19, p-value = 0.0002947
+## alternative hypothesis: true difference in means is not equal to 0
+## 95 percent confidence interval:
+##  2.443809 6.841905
+## sample estimates:
+## mean of x mean of y 
+##  19.74286  15.10000</code></pre>
+<ul>
+<li>t = 4.419: difference is means is 4.419 SE away from zero (p-value is effective zero)</li>
+</ul>
+<pre class="r"><code># z
+2*pnorm(4.419, lower.tail = FALSE) # this gives the normal probability</code></pre>
+<pre><code>## [1] 9.915865e-06</code></pre>
+<pre class="r"><code># calculate test statistic manually
+m6 = mean(c6)
+m8 = mean(c8)
+sd6 = sd(c6)
+sd8 = sd(c8)
+n6 = length(c6)
+n8 = length(c8)
+
+# 1. pooled variance estimate:
+sp = sqrt(((n6 - 1) * sd6^2 + (n8 - 1) * sd8^2) / (n6 + n8 - 2))
+
+# t test
+(m6 - m8) / (sp * sqrt(1/n6 + 1 / n8))</code></pre>
+<pre><code>## [1] 4.419009</code></pre>
+<ul>
+<li>reject</li>
 </ul>
 </div>
 
