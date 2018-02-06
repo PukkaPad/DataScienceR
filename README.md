@@ -27,7 +27,7 @@ Reproductible Research
 
 Statistical Inference
 
-## [Course 7]()
+## [Course 7](https://github.com/PukkaPad/DataScienceR/tree/master/07_RegressionModels)
 
 Regression Models
 
