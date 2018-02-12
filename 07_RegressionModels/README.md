@@ -13,7 +13,7 @@ Regression Models represents a both fundamental and foundational component of th
 
 ## Syllabus
 
-* Least Squares and Linear Regression
+* Least Squares and Linear Regression   
 * Linear Regression and Multivariate Regression
 * Multivariate Regression, Residuals, and Diagnostics
 * Logistic Regression and Poisson Regression
