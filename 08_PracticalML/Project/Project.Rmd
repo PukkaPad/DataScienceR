@@ -1,0 +1,209 @@
+---
+title: "Project Week 4"
+subtitle: " Practical Machine Learning"
+output: html_document
+---
+
+```{r, echo=FALSE, message = FALSE}
+library(knitr)
+```
+
+```{r setup, cache = F, echo = F, message = F, warning = F, tidy = F, results='hide'}
+# make this an external chunk that can be included in any file
+options(width = 100)
+opts_chunk$set(message = F, echo = T, error = F, warning = F, comment = NA, fig.align = 'center', dpi = 100, tidy = F, cache.path = '.cache/', fig.path = '../figure/')
+
+options(xtable.type = 'html')
+knit_hooks$set(inline = function(x) {
+  if(is.numeric(x)) {
+    round(x, getOption('digits'))
+  } else {
+    paste(as.character(x), collapse = ', ')
+  }
+})
+knit_hooks$set(plot = knitr:::hook_plot_html)
+runif(1)
+```
+
+```{r, echo=FALSE}
+library(ggplot2)
+library(AppliedPredictiveModeling)
+library(caret)
+library(ElemStatLearn)
+library(gbm)
+library(rpart)
+library(plm)
+library(lubridate)
+library(rpart.plot)
+library(randomForest)
+library(e1071)
+library(GGally)
+library(corrplot)
+```
+
+---
+
+## Overview
+
+The objective of this Project is to predict how exercises were performed by the participants of the experiment.
+`classe` variable ranges from A to E, with A corresponding to the correct execution of the exercise and the other factors correspond to mistakes.
+
+---
+
+## Download and read data
+
+Data will be downloaded from the source.
+```{r}
+trainUrl <-"https://d396qusza40orc.cloudfront.net/predmachlearn/pml-training.csv"
+testUrl <- "https://d396qusza40orc.cloudfront.net/predmachlearn/pml-testing.csv"
+trainFile <- "../data/pml-training.csv"
+testFile  <- "../data/pml-testing.csv"
+if (!file.exists("../data")) {
+  dir.create("../data")
+}
+if (!file.exists(trainFile)) {
+  download.file(trainUrl, destfile=trainFile, method="curl")
+}
+if (!file.exists(testFile)) {
+  download.file(testUrl, destfile=testFile, method="curl")
+}
+```
+
+After download, csv will be read into two data frames
+
+```{r}
+train <- read.csv("../data/pml-training.csv")
+test <- read.csv("../data/pml-testing.csv")
+```
+
+---
+
+## Data Exploration
+
+Check the dimensions
+
+```{r}
+dim(train)
+dim(test)
+```
+
+The data has 160 variables. The training dataset has 19622 observations while the test dataset contains 20 observations.
+
+Out of the 19622 observations in the train dataset, how many have no missing values? 
+
+**Find Complete Cases**
+```{r}
+sum(complete.cases(train))
+```
+Out of the `r dim(train)[1]` observations in the train dataset, `r sum(complete.cases(train))` have no missing values. Need to remove NA in the Data Cleaning sub-section.
+
+
+It looks like the first 6 columns are not relevant predictors
+
+```{r}
+names(train)
+```
+Check for near zero variance (?nearZeroVar) and remove 6 first columns
+```{r}
+# Remove the near zero variance predictors
+nzvTraining <- nearZeroVar(train, saveMetrics=TRUE)
+training <- train[,nzvTraining$nzv==FALSE]
+
+training <- training[,7:length(colnames(training))]
+```
+
+### Data Cleaning
+
+Remove NA
+
+```{r}
+training <- training[, colSums(is.na(training)) == 0]
+test <- test[, colSums(is.na(test)) == 0] 
+dim(training)
+dim(test)
+```
+
+The number of variables have clearly changed and now they are not equal for train and test datasets.
+
+```{r}
+cols <- colnames(training[, -53]) # 53th col will not be added to the testing dataset
+testing <- test[cols] # only the var chosen
+dim(training); dim(testing) 
+```
+Now the training dataset has `r dim(training)[1]` observations and `r dim(training)[2]` variables. The testing dataset has  `r dim(testing)[1]` observations and `r dim(testing)[2]` variables
+
+```{r}
+table(training$classe) 
+```
+
+---
+
+## Random Forest
+
+### Split `training` into training and validation set
+
+```{r}
+set.seed(280218) 
+Train <- createDataPartition(training$classe, p=0.70, list=F)
+trainDF <- training[Train, ]
+testDF <- training[-Train, ]
+```
+
+Validation set will be used from cross validation.
+
+The Random Forest algorithm will select the variables that are relevant. 5-fold cross valiadtion will be used.
+```{r RF, cache = TRUE}
+controlRf <- trainControl(method="cv", 5)
+modelRf <- train(classe ~ ., data=trainDF, method="rf", trControl=controlRf, ntree=500)
+modelRf
+```
+Now, predict using the validation. check the confusion matrix in order to find the TP, TN, etc
+
+```{r validation, cahce = TRUE}
+predictRf <- predict(modelRf, testDF)
+acc <- confusionMatrix(testDF$classe, predictRf)$overall['Accuracy']
+
+estimated_error_out_of_sample <- 1 - 0.9942
+acc
+estimated_error_out_of_sample
+```
+
+The accuracy of the model is 99.42% and the estimated error out of sample is 0.58%.
+
+### Test set
+
+```{r PredTest, cache =TRUE}
+predictTest <- predict(modelRf, testing)
+predictTest
+```
+
+---
+
+## Appendix
+
+### 1 Pair plots
+
+```{r}
+ggpairs(trainDF, columns=c("total_accel_belt" , "total_accel_arm", 
+                           "total_accel_dumbbell", "total_accel_forearm", "classe"),
+diag=list(continuous="density",   discrete="bar"), axisLabels="show")
+```
+
+```{r, echo = FALSE}
+ggpairs(trainDF, columns=c("roll_belt", "pitch_belt", "yaw_belt" , "classe"),
+diag=list(continuous="density",   discrete="bar"), axisLabels="show")
+```
+
+### 2 Correlation Matrix
+
+```{r}
+corrPlot <- cor(trainDF[, -length(names(trainDF))])
+corrplot(corrPlot, method="circle")
+```
+
+### 3 Decision Tree
+
+```{r}
+modFit <- rpart(classe ~ ., data=trainDF, method="class")
+rpart.plot(modFit)
+```
