@@ -151,13 +151,13 @@ testDF <- training[-Train, ]
 
 Validation set will be used from cross validation.
 
-The Random Forest algorithm will select the variables that are relevant. 5-fold cross valiadtion will be used.
+The Random Forest algorithm will select the variables that are relevant. 5-fold cross validation will be used, with 500 trees.
 ```{r RF, cache = TRUE}
 controlRf <- trainControl(method="cv", 5)
 modelRf <- train(classe ~ ., data=trainDF, method="rf", trControl=controlRf, ntree=500)
 modelRf
 ```
-Now, predict using the validation. check the confusion matrix in order to find the TP, TN, etc
+Now, predict using the validation. check the confusion matrix and get the accurary.
 
 ```{r validation, cahce = TRUE}
 predictRf <- predict(modelRf, testDF)

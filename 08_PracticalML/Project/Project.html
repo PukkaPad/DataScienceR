@@ -257,7 +257,7 @@ Train &lt;- createDataPartition(training$classe, p=0.70, list=F)
 trainDF &lt;- training[Train, ]
 testDF &lt;- training[-Train, ]</code></pre>
 <p>Validation set will be used from cross validation.</p>
-<p>The Random Forest algorithm will select the variables that are relevant. 5-fold cross valiadtion will be used.</p>
+<p>The Random Forest algorithm will select the variables that are relevant. 5-fold cross validation will be used, with 500 trees.</p>
 <pre class="r"><code>controlRf &lt;- trainControl(method=&quot;cv&quot;, 5)
 modelRf &lt;- train(classe ~ ., data=trainDF, method=&quot;rf&quot;, trControl=controlRf, ntree=500)
 modelRf</code></pre>
@@ -279,7 +279,7 @@ Resampling results across tuning parameters:
 
 Accuracy was used to select the optimal model using the largest value.
 The final value used for the model was mtry = 27.</code></pre>
-<p>Now, predict using the validation. check the confusion matrix in order to find the TP, TN, etc</p>
+<p>Now, predict using the validation. check the confusion matrix and get the accurary.</p>
 <pre class="r"><code>predictRf &lt;- predict(modelRf, testDF)
 acc &lt;- confusionMatrix(testDF$classe, predictRf)$overall['Accuracy']
 
