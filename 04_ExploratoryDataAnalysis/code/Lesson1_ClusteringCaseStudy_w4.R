@@ -1,7 +1,7 @@
 # Lesson 1: Case Studies
 # Clustering Case Study
 # Week 4
-# 
+setwd("/Users/MarianaSouza/Code/onlineCourses/Coursera/DataScienceR")
 load("../data/samsungData.rda")
 names(samsungData)[1:12]
 table(samsungData$activity)
