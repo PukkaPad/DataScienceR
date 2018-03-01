@@ -31,11 +31,11 @@ Statistical Inference
 
 Regression Models
 
-## [Course 8]()
+## [Course 8](https://github.com/PukkaPad/DataScienceR/tree/master/08_PracticalML)
 
 Practical Machine Learning
 
-## [Course 9]()
+## [Course 9](https://github.com/PukkaPad/DataScienceR/tree/master/09_DevelopingDataProducts)
 
 Developing Data Products
 
